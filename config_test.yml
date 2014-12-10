@@ -1,0 +1,23 @@
+services:
+  - id: tsp-mooc-overview
+    completeName: TSP MOOC Overview
+    stack:
+      - containerName: tsp-mooc-overview
+        image: tsp-mooc-overview
+  - id: django-example
+    completeName: Django overview
+    stack:
+      - containerName: db
+        image: paintedfox/postgresql
+        environment:
+          USER: docker
+          PASS: docker
+          DB: docker
+      - containerName: djangodocker_web
+        image: djangodocker_web
+        links:
+          - db
+        ports:
+          - "8000:8080"
+        volumes:
+          - .:/app

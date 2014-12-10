@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <!-- meta -->
+    <meta charset="utf-8"/>
+    <meta name="author"   content="François Monniot">
+    <meta name="viewport" content="width=device-width">
+
+    <!-- styles -->
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=RobotoDraft:400,500,700,400italic">
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
+    <link rel="stylesheet" type="text/css" href="polymer.css"/>
+
+    <title>{{ title }}</title>
+  </head>
+  <body>
+
+  <header class="app-bar">
+    <button class="action hamburger">Show Navigation</button>
+    <span class="title">{{ title }}</span>
+  </header>
+
+  <div id="side-drawer">
+    <span class="logo">TSP MOOCs</span>
+    <nav>
+      <ul>
+        <li><a href="/" class="active">Overview</a></li>
+      </ul>
+    </nav>
+    <div class="about">
+      <a href="https://github.com/pfe-asr-2014/tsp-mooc-overview">Fork on GitHub</a><br/>
+      Licensed under the MIT License
+    </div>
+  </div>
+
+  <div class="desktop-wrapper">
+    <div class="wrapper">
+      <p class="text-right">Refreshed less than a minute ago</p>
+      <table class="services-state">
+        <thead>
+          <th colspan="2">Name</th>
+          <th>State</th>
+          <th>Actions</th>
+        </thead>
+        <tbody>
+          {% for service in state.services %}
+          <tr>
+            <td>{{ service.completeName }}</td>
+            <td><a href="#open:{{ service.id }}"><em>Open this course</em></a></td>
+            <td class="{{ service.state | toclass }}">{{ service.state }}</td>
+            <td>
+              {% if service.state == 'Running' %}
+                <a href="#stop:{{ service.id }}">Stop</a>
+                <a href="#uninstall:{{ service.id }}">Uninstall</a>
+              {% elif service.state == 'Stopped' %}
+                <a href="#run:{{ service.id }}">Run</a>
+                <a href="#uninstall:{{ service.id }}">Uninstall</a>
+              {% elif service.state == 'Not Installed' %}
+                <a href="#install:{{ service.id }}">Install</a>
+              {% else %}
+              <div class="progress" role="progressbar">
+                <div class="activeProgress indeterminate"></div>
+              </div>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="mask-modal"></div>
+
+  <script type="text/javascript" src="js/log.js"></script>
+  <script type="text/javascript" src="js/drawer.js"></script>
+  <script type="text/javascript" src="js/table.js" ></script>
+  <script type="text/javascript" src="js/router.js"></script>
+  <script type="text/javascript" src="js/api.js"></script>
+  <script type="text/javascript" src="js/main.js"></script>
+  </body>
+</html>

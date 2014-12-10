@@ -1,0 +1,18 @@
+services:
+  - id: tsp-mooc-db
+    completeName: Relational Database
+    stack:
+      - containerName: tsp-moocdb-postgres
+        image: tsp-moocdb-postgres:latest
+      - containerName: tsp-moocdb-web
+        image: tsp-moocdb-web
+  - id: tsp-mooc-overview
+    completeName: TSP MOOC Overview
+    stack:
+      - containerName: tsp-mooc-overview
+        image: tsp-mooc-overview
+  - id: tsp-mooc-python
+    completeName: Learning Python
+    stack:
+      - containerName: tsp-mooc-python
+        image: tsp-mooc-python
