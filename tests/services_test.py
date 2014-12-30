@@ -1,12 +1,10 @@
-import unittest, mock, yaml
+import unittest, mock, yaml, docker
 from services import Services
-from docker import Client
 from mock import call
 
-class ServicesTest(unittest.TestCase):
+class ServicesConfigTest(unittest.TestCase):
     def setUp(self):
-        self.docker = mock.create_autospec(Client)
-        self.services = Services(self.docker, "tests/config.yml")
+        self.docker = mock.create_autospec(docker.Client)
 
     def test_create_instance_without_config(self):
         services = Services(self.docker)
@@ -23,13 +21,21 @@ class ServicesTest(unittest.TestCase):
         self.assertEqual(services.cfg, config)
 
     def test_provide_service_states_as_constant(self):
-        self.assertIsNotNone(self.services.STATE_INSTALLING)
-        self.assertIsNotNone(self.services.STATE_UNINSTALLING)
-        self.assertIsNotNone(self.services.STATE_STOPPING)
+        services = Services(self.docker, "tests/config.yml")
 
-        self.assertIsNotNone(self.services.STATE_RUNNING)
-        self.assertIsNotNone(self.services.STATE_STOPPED)
-        self.assertIsNotNone(self.services.STATE_NOT_INSTALLED)
+        self.assertIsNotNone(services.STATE_INSTALLING)
+        self.assertIsNotNone(services.STATE_UNINSTALLING)
+        self.assertIsNotNone(services.STATE_STOPPING)
+
+        self.assertIsNotNone(services.STATE_RUNNING)
+        self.assertIsNotNone(services.STATE_STOPPED)
+        self.assertIsNotNone(services.STATE_NOT_INSTALLED)
+
+
+class ServicesStateTest(unittest.TestCase):
+    def setUp(self):
+        self.docker = mock.create_autospec(docker.Client)
+        self.services = Services(self.docker, "tests/config.yml")
 
     def test_get_state_not_installed(self):
         cfg = self.services.cfg['services'][1]
@@ -64,42 +70,62 @@ class ServicesTest(unittest.TestCase):
 
         self.assertEqual(state, self.services.STATE_RUNNING)
 
-    def test_install_service(self):
-        service = self.services.cfg['services'][1]
-        stack = service['stack']
 
-        self.services.install(service)
+class ServicesOperationTest(unittest.TestCase):
+    def setUp(self):
+        self.docker = mock.create_autospec(docker.Client)
+        self.services = Services(self.docker, "tests/config.yml")
+
+    def test_install_service(self):
+        self.services.install(self.services.cfg['services'][1])
 
         self.assertEqual(self.docker.create_container.call_args_list, [
             call(
-                name = stack[0]['containerName'],
-                image = stack[0]['image'],
-                environment = stack[0]['environment'],
+                name = 'db',
+                image = 'paintedfox/postgresql',
+                environment = {'USER':'docker', 'PASS':'docker', 'DB':'docker'},
                 ports = None,
                 volumes = None
             ),
             call(
-                name = stack[1]['containerName'],
-                image = stack[1]['image'],
+                name = 'djangodocker_web',
+                image = 'djangodocker_web',
                 environment = None,
-                ports = stack[1]['ports'],
-                volumes = stack[1]['volumes']
+                ports = ['8080'],
+                volumes = ['/app']
             )
         ])
 
     def test_uninstall_service(self):
-        return
-        service = self.services.cfg['services'][1]
-        stack = service['stack']
+        self.services.uninstall(self.services.cfg['services'][1])
 
         self.assertEqual(self.docker.remove_image.call_args_list, [
-            call(name = stack[0]['image']),
-            call(name = stack[1]['image'])
+            call(image = 'paintedfox/postgresql'),
+            call(image = 'djangodocker_web')
+        ])
+
+    def test_stop_service(self):
+        self.services.stop(self.services.cfg['services'][1])
+
+        self.assertEqual(self.docker.stop.call_args_list, [
+            call(container = 'db'),
+            call(container = 'djangodocker_web')
         ])
 
     def test_run_service(self):
-        # Here we verify the links are made
-        pass
+        self.services.run(self.services.cfg['services'][1])
 
-    def test_stop_service(self):
-        pass
+        self.assertEqual(self.docker.start.call_args_list, [
+            call(
+                container = 'db',
+                links = None,
+                port_bindings = None,
+                binds = None
+            ),
+            call(
+                container = 'djangodocker_web',
+                links = [("db", "db")],
+                port_bindings = {8080: 8000},
+                binds = {'/app': {'bind': '/app'}}
+            )
+        ])

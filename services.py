@@ -1,4 +1,4 @@
-import yaml
+import yaml, os
 
 def get_first(iterable, default=None):
     if iterable:
@@ -82,16 +82,14 @@ class Services:
         if(new_state == state):
             return service_id + ' is already in the given state ('+new_state+')'
         elif(new_state == self.STATE_RUNNING):
-            # run
-            pass
+            return self.run(service)
         elif(new_state == self.STATE_STOPPED):
             if(state == self.STATE_NOT_INSTALLED):
                 return self.install(service)
             else:
-                pass
+                return self.stop(service)
         elif(new_state == self.STATE_NOT_INSTALLED):
-            # uninstall
-            pass
+            return self.uninstall(service)
         else:
             return 'The given state ('+new_state+') is incorrect.'
 
@@ -106,14 +104,25 @@ class Services:
         """
         val = []
         for stack in service['stack']:
-            name = stack['containerName'] if 'containerName' in stack else None
             image = stack['image'] if 'image' in stack else None
             environment = stack['environment'] if 'environment' in stack else None
-            ports = stack['ports'] if 'ports' in stack else None
-            volumes = stack['volumes'] if 'volumes' in stack else None
+
+            if 'ports' in stack:
+                ports = []
+                for p in stack['ports']:
+                    ports.append(p.split(':')[1])
+            else:
+                ports = None
+
+            if 'volumes' in stack:
+                volumes = []
+                for v in stack['volumes']:
+                    volumes.append(os.path.abspath(v.split(':')[0]))
+            else:
+                volumes = None
 
             val.append(self.docker.create_container(
-                name = name,
+                name = stack['containerName'],
                 image = image,
                 environment = environment,
                 ports = ports,
@@ -126,14 +135,66 @@ class Services:
         This method assumes the service is installed.
         From a docker pov, this method stopped running containers and then remove
         the associated images.
+
+        Arguments:
+        service -- the representation of the service defined in the configuration file
         """
         self.stop(service)
-        pass
+
+        for stack in service['stack']:
+            self.docker.remove_image(image = stack['image'])
 
     def stop(self, service):
         """
         Stop the given service as described in the configuration file. This method
         assumes the service is running.
         From a Docker pov, this method stopped all running containers.
+
+        Arguments:
+        service -- the representation of the service defined in the configuration file
         """
-        pass
+        for stack in service['stack']:
+            self.docker.stop(container = stack['containerName'])
+
+    def run(self, service):
+        """
+        Run the given service as described in the configuration file. This method
+        assumes the service is installed.
+        From a docker pov, thes method start all containers.
+
+        Arguments:
+        service -- the representation of the service defined in the configuration file
+        """
+        for stack in service['stack']:
+            if 'links' in stack:
+                links = []
+                for l in stack['links']:
+                    links.append((l,l))
+            else:
+                links = None
+
+
+            if 'ports' in stack:
+                ports = {}
+                for p in stack['ports']:
+                    ps = p.split(':')
+                    ports[int(ps[1])] = int(ps[0])
+            else:
+                ports = None
+
+            if 'volumes' in stack:
+                binds = {}
+                for v in stack['volumes']:
+                    vs = v.split(':')
+                    binds[vs[1]] = {
+                        'bind': os.path.abspath(vs[0])
+                    }
+            else:
+                binds = None
+
+            self.docker.start(
+                container = stack['containerName'],
+                links = links,
+                port_bindings = ports,
+                binds = binds
+            )
