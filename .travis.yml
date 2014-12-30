@@ -6,5 +6,4 @@ install:
   - "pip install -r requirements.txt"
 # command to run tests, e.g. python setup.py test
 script:
-  # Test services implementation
-  - python services_test.py
+  - nosetests

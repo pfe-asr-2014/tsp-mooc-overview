@@ -2,3 +2,4 @@ flask
 docker-py
 pyyaml
 mock
+nose
