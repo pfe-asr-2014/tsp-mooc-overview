@@ -17,4 +17,4 @@ docker run -it debian bash
 
 ## Acknowledgement
 
-`config_test.yml` containers are based on [rockymeza/django-docker-example](https://github.com/rockymeza/django-docker-example).
+* tests containers are based on [rockymeza/django-docker-example](https://github.com/rockymeza/django-docker-example).

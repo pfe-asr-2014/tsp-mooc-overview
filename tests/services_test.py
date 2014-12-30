@@ -6,7 +6,7 @@ from mock import call
 class ServicesTest(unittest.TestCase):
     def setUp(self):
         self.docker = mock.create_autospec(Client)
-        self.services = Services(self.docker, "config_test.yml")
+        self.services = Services(self.docker, "tests/config.yml")
 
     def test_create_instance_without_config(self):
         services = Services(self.docker)
@@ -15,8 +15,8 @@ class ServicesTest(unittest.TestCase):
         self.assertEqual(services.cfg, {'services': []})
 
     def test_create_instance_with_config(self):
-        services = Services(self.docker, "config_test.yml")
-        with open("config_test.yml", 'r') as ymlfile:
+        services = Services(self.docker, "tests/config.yml")
+        with open("tests/config.yml", 'r') as ymlfile:
             config = yaml.load(ymlfile)
 
         # Assert the config is as loaded in config_test.yml
@@ -103,6 +103,3 @@ class ServicesTest(unittest.TestCase):
 
     def test_stop_service(self):
         pass
-
-if __name__ == '__main__':
-    unittest.main()
