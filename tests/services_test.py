@@ -70,6 +70,50 @@ class ServicesStateTest(unittest.TestCase):
 
         self.assertEqual(state, self.services.STATE_RUNNING)
 
+    @mock.patch.object(Services, 'uninstall')
+    @mock.patch.object(Services, 'install')
+    @mock.patch.object(Services, 'stop')
+    @mock.patch.object(Services, 'run')
+    @mock.patch.object(Services, 'by_id')
+    @mock.patch.object(Services, 'state')
+    def test_change_state(self, state, by_id,
+                          mock_run, mock_stop, mock_install, mock_uninstall):
+        service = {}
+        by_id.return_value = service
+
+        # The desired state is the current state
+        state.return_value = self.services.STATE_RUNNING
+        self.assertEqual(
+            'service is already in the given state (running)',
+            self.services.change('service', self.services.STATE_RUNNING)
+        )
+
+        # Unknown state
+        self.assertEqual(
+            'The given state (helloWorld) is incorrect.',
+            self.services.change('service', 'helloWorld')
+        )
+
+        # Run the service
+        state.return_value = self.services.STATE_STOPPED
+        self.services.change('service', self.services.STATE_RUNNING)
+        mock_run.assert_called_with(service)
+
+        # Stop the service
+        state.return_value = self.services.STATE_RUNNING
+        self.services.change('service', self.services.STATE_STOPPED)
+        mock_stop.assert_called_with(service)
+
+        # Install the service
+        state.return_value = self.services.STATE_NOT_INSTALLED
+        self.services.change('service', self.services.STATE_STOPPED)
+        mock_install.assert_called_with(service)
+
+        # Uninstall the service
+        state.return_value = self.services.STATE_STOPPED
+        self.services.change('service', self.services.STATE_NOT_INSTALLED)
+        mock_uninstall.assert_called_with(service)
+
 
 class ServicesOperationTest(unittest.TestCase):
     def setUp(self):
