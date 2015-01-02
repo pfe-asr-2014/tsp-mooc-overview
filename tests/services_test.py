@@ -32,6 +32,31 @@ class ServicesConfigTest(unittest.TestCase):
         self.assertIsNotNone(services.STATE_NOT_INSTALLED)
 
 
+class ServicesMiscTest(unittest.TestCase):
+    def setUp(self):
+        self.docker = mock.create_autospec(docker.Client)
+        self.services = Services(self.docker, "tests/config.yml")
+
+    def test_by_id(self):
+        self.assertEqual(self.services.by_id('django-example'),
+            self.services.cfg['services'][1])
+
+        self.assertEqual(self.services.by_id('schmilblick'), None)
+
+        self.assertEqual(self.services.by_id('tsp-mooc-overview'),
+            self.services.cfg['services'][0])
+
+    def test_docker_state(self):
+        self.docker.images.return_value = 'images'
+        self.docker.containers.return_value = 'containers'
+
+        self.assertEqual(self.services.docker_state(),
+            {'images': 'images', 'containers': 'containers'})
+
+        self.docker.images.assert_called_with(name = '*tsp*')
+        self.assertTrue(self.docker.containers.called)
+
+
 class ServicesStateTest(unittest.TestCase):
     def setUp(self):
         self.docker = mock.create_autospec(docker.Client)
@@ -113,6 +138,28 @@ class ServicesStateTest(unittest.TestCase):
         state.return_value = self.services.STATE_STOPPED
         self.services.change('service', self.services.STATE_NOT_INSTALLED)
         mock_uninstall.assert_called_with(service)
+
+    @mock.patch.object(Services, 'state')
+    def test_get_states(self, state):
+        state.return_value = 'State'
+
+        self.assertEqual(self.services.states(),
+            {'services': [
+                {
+                'completeName': 'TSP MOOC Overview',
+                'state': 'State',
+                'id': 'tsp-mooc-overview'
+                },
+                {
+                'completeName': 'Django overview',
+                'state': 'State',
+                'id': 'django-example'
+                }
+            ]})
+        self.assertEqual(state.call_args_list, [
+            call(self.services.cfg['services'][0]),
+            call(self.services.cfg['services'][1])
+            ])
 
 
 class ServicesOperationTest(unittest.TestCase):
