@@ -1,4 +1,4 @@
-import unittest, mock, yaml, docker
+import unittest, mock, yaml, docker, os
 from overview.services import Services
 from mock import call
 
@@ -183,7 +183,7 @@ class ServicesOperationTest(unittest.TestCase):
                 image = 'djangodocker_web',
                 environment = None,
                 ports = ['8080'],
-                volumes = ['/app']
+                volumes = [os.getcwd()]
             )
         ])
 
@@ -217,6 +217,6 @@ class ServicesOperationTest(unittest.TestCase):
                 container = 'djangodocker_web',
                 links = [("db", "db")],
                 port_bindings = {8080: 8000},
-                binds = {'/app': {'bind': '/app'}}
+                binds = {'/app': {'bind': os.getcwd()}}
             )
         ])
