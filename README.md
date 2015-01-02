@@ -15,6 +15,17 @@ docker run -it --env HOST_IP=$(ip route|awk '/192/ { print $9 }') debian bash
 docker run -it debian bash
 ```
 
+## Tests
+
+```sh
+# Running tests
+fig run app nosetests
+
+# With coverage
+fig run app nosetests --with-coverage --cover-html --cover-package=services
+
+```
+
 ## Acknowledgement
 
 * tests containers are based on [rockymeza/django-docker-example](https://github.com/rockymeza/django-docker-example).
