@@ -1,5 +1,5 @@
 flask
-docker-py > 0.7
+docker-py>=0.7
 pyyaml
 mock
 nose

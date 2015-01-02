@@ -1,5 +1,5 @@
 import unittest, mock, yaml, docker
-from services import Services
+from overview.services import Services
 from mock import call
 
 class ServicesConfigTest(unittest.TestCase):
