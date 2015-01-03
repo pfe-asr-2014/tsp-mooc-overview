@@ -4,3 +4,5 @@ pyyaml
 mock
 nose
 coverage
+Flask-Testing
+blinker
