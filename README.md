@@ -3,6 +3,7 @@ TSP MOOC Overview
 
 [![Build Status](https://travis-ci.org/pfe-asr-2014/tsp-mooc-overview.svg?branch=master)](https://travis-ci.org/pfe-asr-2014/tsp-mooc-overview)
 [![Coverage Status](https://img.shields.io/coveralls/pfe-asr-2014/tsp-mooc-overview.svg)](https://coveralls.io/r/pfe-asr-2014/tsp-mooc-overview)
+[![Code Health](https://landscape.io/github/pfe-asr-2014/tsp-mooc-overview/master/landscape.svg)](https://landscape.io/github/pfe-asr-2014/tsp-mooc-overview/master)
 
 A service for the TSP MOOC platform right on your computer that let you acces, manage and overview all TMSP docker ready services.
 
