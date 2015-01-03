@@ -22,7 +22,7 @@ docker run -it debian bash
 fig run app nosetests
 
 # With coverage
-fig run app nosetests --with-coverage --cover-html --cover-package=services
+fig run app nosetests --with-coverage --cover-html --cover-package=overview
 
 ```
 
