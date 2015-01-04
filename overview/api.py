@@ -9,9 +9,9 @@ def show_docker():
 def list_services():
     return jsonify(services.states())
 
-@app.route('/api/v1/services/<id>', methods=['PATCH'])
-def patch_service(id):
-    err = services.change(id, request.json['state'])
+@app.route('/api/v1/services/<service_id>', methods=['PATCH'])
+def patch_service(service_id):
+    err = services.change(service_id, request.json['state'])
 
     if err:
         return jsonify({'message':'This change cannot be made', 'error': err}), 400
