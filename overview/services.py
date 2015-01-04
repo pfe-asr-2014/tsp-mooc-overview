@@ -42,7 +42,7 @@ class Services(object):
 
     def state(self, service):
         containers = self.docker.containers()
-        imageNok = True
+        imageNok = False
         containersNok = True
 
         # search for image in docker
@@ -50,7 +50,9 @@ class Services(object):
             image = srv['image']
             image_name = image.split(':')[0]
             img = get_first(self.docker.images(name = image_name))
-            imageNok &= ( img == None )
+            if img is None:
+                imageNok = True
+
 
             # Is there a running container associated to this image ?
             for container in containers:
