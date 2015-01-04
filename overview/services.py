@@ -7,7 +7,7 @@ def get_first(iterable, default=None):
     return default
 
 
-class Services:
+class Services(object):
 
     # Transient state
     STATE_INSTALLING = 'installing'
