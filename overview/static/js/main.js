@@ -21,5 +21,5 @@
     api.patch('services/'+serviceId).with({'state':'not installed'}).now();
   });
 
-  window.addEventListener('hashchange', router.onHashChange.bind(router));
+  router.plantOn(window);
 })();

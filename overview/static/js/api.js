@@ -16,13 +16,16 @@ Api.prototype.with = function(params) {
   return this;
 };
 
-Api.prototype.now = function() {
+Api.prototype.now = function(cb) {
   log('`'+this.method+' '+this.base+this.resource+'` with', this.params);
 
   var request = new XMLHttpRequest();
   request.onreadystatechange = function() {
     if (request.readyState === 4) {
       log('response received:', request.response);
+      if(cb) {
+        cb(request.response);
+      }
     }
   };
 
