@@ -1,6 +1,7 @@
 services:
   - id: tsp-mooc-db
     completeName: Relational Database
+    port: 8080
     stack:
       - containerName: tsp-moocdb-postgres
         image: tsp-moocdb-postgres:latest
@@ -17,6 +18,7 @@ services:
         image: tsp-mooc-overview
   - id: tsp-mooc-python
     completeName: Learning Python
+    port: 1337
     stack:
       - containerName: tsp-mooc-python
         image: tsp-mooc-python

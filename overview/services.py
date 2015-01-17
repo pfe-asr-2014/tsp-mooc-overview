@@ -72,7 +72,8 @@ class Services(object):
             services.append({
                 'completeName': service['completeName'],
                 'id':       service['id'],
-                'state':    self.state(service).title()
+                'state':    self.state(service).title(),
+                'port':     service['port'] if 'port' in service else None
                 })
 
         return {'services': services}

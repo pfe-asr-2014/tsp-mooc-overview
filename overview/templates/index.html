@@ -46,7 +46,11 @@
           {% for service in state.services %}
           <tr>
             <td>{{ service.completeName }}</td>
-            <td><a href="#open:{{ service.id }}"><em>Open this course</em></a></td>
+            <td>
+              {% if service.port %}
+              <a target="_blank" href="http://localhost:{{ service.port }}"><em>Open this course</em></a>
+              {% endif %}
+            </td>
             <td class="{{ service.state | toclass }}">{{ service.state }}</td>
             <td>
               {% if service.state == 'Running' %}

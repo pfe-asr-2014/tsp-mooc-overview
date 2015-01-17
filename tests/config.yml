@@ -6,6 +6,7 @@ services:
         image: tsp-mooc-overview
   - id: django-example
     completeName: Django overview
+    port: 8000
     stack:
       - containerName: db
         image: paintedfox/postgresql

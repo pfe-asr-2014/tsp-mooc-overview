@@ -148,12 +148,14 @@ class ServicesStateTest(unittest.TestCase):
                 {
                 'completeName': 'TSP MOOC Overview',
                 'state': 'State',
-                'id': 'tsp-mooc-overview'
+                'id': 'tsp-mooc-overview',
+                'port': None
                 },
                 {
                 'completeName': 'Django overview',
                 'state': 'State',
-                'id': 'django-example'
+                'id': 'django-example',
+                'port': 8000
                 }
             ]})
         self.assertEqual(state.call_args_list, [
