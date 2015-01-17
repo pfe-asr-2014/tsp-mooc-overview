@@ -6,6 +6,10 @@ services:
         image: tsp-moocdb-postgres:latest
       - containerName: tsp-moocdb-web
         image: tsp-moocdb-web
+        ports:
+          - "8080:80"
+        links:
+          - tsp-moocdb-postgres
   - id: tsp-mooc-overview
     completeName: TSP MOOC Overview
     stack:
