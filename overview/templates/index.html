@@ -48,7 +48,7 @@
             <td>{{ service.completeName }}</td>
             <td>
               {% if service.port %}
-              <a target="_blank" href="http://localhost:{{ service.port }}"><em>Open this course</em></a>
+              <a target="_blank" href="http://{{ base }}:{{ service.port }}"><em>Open this course</em></a>
               {% endif %}
             </td>
             <td class="{{ service.state | toclass }}">{{ service.state }}</td>

@@ -11,10 +11,15 @@ A service for the TSP MOOC platform right on your computer that let you acces, m
 
 ```sh
 # With boot2docker
-docker run -it --env HOST_IP=$(ip route|awk '/192/ { print $9 }') debian bash
+docker run -it -p 5000:5000 \
+           -v /var/run/docker.sock:/var/run/docker.sock \
+           --env HOST_IP=$(boot2docker-cli ip) \
+           tsp-mooc-overview
 
 # Without b2d
-docker run -it debian bash
+docker run -it -p 5000:5000 \
+           -v /var/run/docker.sock:/var/run/docker.sock \
+           tsp-mooc-overview
 ```
 
 ## Tests
