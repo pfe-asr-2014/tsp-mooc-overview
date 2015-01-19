@@ -4,9 +4,9 @@ services:
     port: 8080
     stack:
       - containerName: tsp-moocdb-postgres
-        image: tsp-moocdb-postgres:latest
+        image: fmonniot/tsp-moocdb-postgres:latest
       - containerName: tsp-moocdb-web
-        image: tsp-moocdb-web
+        image: fmonniot/tsp-moocdb-web:latest
         ports:
           - "8080:80"
         links:
