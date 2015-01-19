@@ -14,7 +14,7 @@
   });
 
   router.register('install', function(serviceId){
-    api.patch('services/'+serviceId).with({'state':'installed'}).now();
+    api.patch('services/'+serviceId).with({'state':'stopped'}).now();
   });
 
   router.register('uninstall', function(serviceId){
