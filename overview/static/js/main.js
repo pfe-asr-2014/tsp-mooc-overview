@@ -69,11 +69,21 @@
   });
 
   router.register('install', function(serviceId){
-    api.patch('services/'+serviceId).with({'state':'stopped'}).now();
+    operationInProgress(serviceId);
+    api.patch('services/'+serviceId).with({'state':'stopped'}).now(function(status, data){
+      if(status == 200){
+        stateChanged(serviceId, 'Stopped');
+      }
+    });
   });
 
   router.register('uninstall', function(serviceId){
-    api.patch('services/'+serviceId).with({'state':'not installed'}).now();
+    operationInProgress(serviceId);
+    api.patch('services/'+serviceId).with({'state':'not installed'}).now(function(status, data){
+      if(status == 200){
+        stateChanged(serviceId, 'Not Installed');
+      }
+    });
   });
 
   router.plantOn(window);
