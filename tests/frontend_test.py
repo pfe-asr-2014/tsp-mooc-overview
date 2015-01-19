@@ -1,4 +1,4 @@
-import mock, overview, os
+import mock, overview, os, docker
 from flask.ext.testing import TestCase
 from overview.services import Services
 
@@ -17,7 +17,12 @@ class FrontendTest(TestCase):
         self.assert_context('title', 'Overview')
         self.assert_context('state', states)
 
-    def test_courses_url(self):
+    @mock.patch.object(docker.Client, 'images')
+    @mock.patch.object(docker.Client, 'containers')
+    def test_courses_url(self, mock_docker_containers, mock_docker_images):
+        mock_docker_containers.return_value = {}
+        mock_docker_images.return_value = {}
+
         # Without the env variable set, we default to localhost
         self.client.get('/')
         self.assert_context('base', 'localhost')
