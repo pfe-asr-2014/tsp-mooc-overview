@@ -105,9 +105,11 @@ class Services(object):
         Arguments:
         service -- the representation of the service defined in the configuration file
         """
-        val = []
         for stack in service['stack']:
-            image = stack['image'] if 'image' in stack else None
+            image = stack['image']
+            if(len(self.docker.images(name = image)) < 1):
+                self.docker.pull(image)
+
             environment = stack['environment'] if 'environment' in stack else None
 
             if 'ports' in stack:
@@ -124,14 +126,13 @@ class Services(object):
             else:
                 volumes = None
 
-            val.append(self.docker.create_container(
+            self.docker.create_container(
                 name = stack['containerName'],
                 image = image,
                 environment = environment,
                 ports = ports,
                 volumes = volumes
-            ))
-        return val
+            )
 
     def uninstall(self, service):
         """ Uninstall the given service as described in the configuration file.
@@ -145,6 +146,7 @@ class Services(object):
         self.stop(service)
 
         for stack in service['stack']:
+            self.docker.remove_container(container = stack['containerName'])
             self.docker.remove_image(image = stack['image'])
 
     def stop(self, service):

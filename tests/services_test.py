@@ -172,6 +172,12 @@ class ServicesOperationTest(unittest.TestCase):
     def test_install_service(self):
         self.services.install(self.services.cfg['services'][1])
 
+        self.assertEqual(self.docker.images.call_args_list,
+            [call(name='paintedfox/postgresql'), call(name='djangodocker_web')])
+
+        self.assertEqual(self.docker.pull.call_args_list,
+            [call('paintedfox/postgresql'), call('djangodocker_web')])
+
         self.assertEqual(self.docker.create_container.call_args_list, [
             call(
                 name = 'db',
@@ -192,6 +198,10 @@ class ServicesOperationTest(unittest.TestCase):
     def test_uninstall_service(self):
         self.services.uninstall(self.services.cfg['services'][1])
 
+        self.assertEqual(self.docker.remove_container.call_args_list,[
+            call(container = 'db'),
+            call(container = 'djangodocker_web')
+        ])
         self.assertEqual(self.docker.remove_image.call_args_list, [
             call(image = 'paintedfox/postgresql'),
             call(image = 'djangodocker_web')
