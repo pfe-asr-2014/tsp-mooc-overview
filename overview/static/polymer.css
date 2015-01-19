@@ -9,6 +9,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 Some styles have been changed to not use the shadow DOM as in polymer.
 */
 
+.hide[role~="progressbar"] {
+  display: none;
+}
+
 [role~="progressbar"] {
   display: inline-block;
   width: 100%;

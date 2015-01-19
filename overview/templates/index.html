@@ -44,28 +44,31 @@
         </thead>
         <tbody>
           {% for service in state.services %}
-          <tr>
+          <tr id="id-{{ service.id }}">
             <td>{{ service.completeName }}</td>
             <td>
               {% if service.port %}
               <a target="_blank" href="http://{{ base }}:{{ service.port }}"><em>Open this course</em></a>
               {% endif %}
             </td>
-            <td class="{{ service.state | toclass }}">{{ service.state }}</td>
+            <td class="{{ service.state | toclass }} service-state">{{ service.state }}</td>
             <td>
-              {% if service.state == 'Running' %}
-                <a href="#stop:{{ service.id }}">Stop</a>
-                <a href="#uninstall:{{ service.id }}">Uninstall</a>
-              {% elif service.state == 'Stopped' %}
-                <a href="#run:{{ service.id }}">Run</a>
-                <a href="#uninstall:{{ service.id }}">Uninstall</a>
-              {% elif service.state == 'Not Installed' %}
-                <a href="#install:{{ service.id }}">Install</a>
-              {% else %}
-              <div class="progress" role="progressbar">
+              <a class="{% if service.state == 'Running' %}hide{% endif %}"
+                 data-action="run"
+                 href="#run:{{ service.id }}">Run</a>
+              <a class="{% if service.state == 'Stopped' %}hide{% endif %}"
+                 data-action="stop"
+                 href="#stop:{{ service.id }}">Stop</a>
+              <a class="{% if service.state != 'Not Installed' %}hide{% endif %}"
+                 data-action="install"
+                 href="#install:{{ service.id }}">Install</a>
+              <a class="{% if service.state == 'Not Installed' %}hide{% endif %}"
+                 data-action="uninstall"
+                 href="#uninstall:{{ service.id }}">Uninstall</a>
+
+              <div class="hide" role="progressbar">
                 <div class="activeProgress indeterminate"></div>
               </div>
-              {% endif %}
             </td>
           </tr>
           {% endfor %}

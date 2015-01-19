@@ -125,6 +125,10 @@ table th {
     font-weight: 700;
 }
 
+.hide {
+  display: none;
+}
+
 .color-red {
   color: red;
 }

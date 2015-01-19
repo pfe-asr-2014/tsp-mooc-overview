@@ -24,7 +24,7 @@ Api.prototype.now = function(cb) {
     if (request.readyState === 4) {
       log('response received:', request.response);
       if(cb) {
-        cb(request.response);
+        cb(request.status, request.response);
       }
     }
   };
