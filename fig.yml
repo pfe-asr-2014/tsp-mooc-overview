@@ -1,5 +1,5 @@
 app:
-  image: tsp-mooc-overview
+  build: .
   command: python app.py
   volumes:
     - .:/app

@@ -52,10 +52,10 @@
             </td>
             <td class="{{ service.state | toclass }} service-state">{{ service.state }}</td>
             <td>
-              <a class="{% if service.state == 'Running' %}hide{% endif %}"
+              <a class="{% if service.state == 'Running' or service.state == 'Not Installed' %}hide{% endif %}"
                  data-action="run"
                  href="#run:{{ service.id }}">Run</a>
-              <a class="{% if service.state == 'Stopped' %}hide{% endif %}"
+              <a class="{% if service.state == 'Stopped' or service.state == 'Not Installed' %}hide{% endif %}"
                  data-action="stop"
                  href="#stop:{{ service.id }}">Stop</a>
               <a class="{% if service.state != 'Not Installed' %}hide{% endif %}"
