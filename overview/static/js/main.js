@@ -10,6 +10,10 @@
     'Stopped': {
       'class': 'color-red',
       'actions': ['run', 'uninstall']
+    },
+    'Not Installed': {
+      'class': 'color-gray',
+      'actions': ['install']
     }
   };
   function stateChanged(serviceId, state) {
