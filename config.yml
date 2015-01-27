@@ -11,6 +11,14 @@ services:
           - "8080:80"
         links:
           - tsp-moocdb-postgres
+  - id: nginx
+    completeName: Nginx demo
+    port: 8081
+    stack:
+      - containerName: nginx-demo
+        image: nginx:latest
+        ports:
+          - "8081:80"
   - id: tsp-mooc-overview
     completeName: TSP MOOC Overview
     stack:
