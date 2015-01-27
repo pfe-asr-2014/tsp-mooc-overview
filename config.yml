@@ -1,14 +1,14 @@
 services:
   - id: tsp-mooc-db
     completeName: Relational Database
-    port: 8080
+    port: 80
     stack:
       - containerName: tsp-moocdb-postgres
         image: fmonniot/tsp-moocdb-postgres:latest
       - containerName: tsp-moocdb-web
         image: fmonniot/tsp-moocdb-web:latest
         ports:
-          - "8080:80"
+          - "80:80"
         links:
           - tsp-moocdb-postgres
   - id: nginx
