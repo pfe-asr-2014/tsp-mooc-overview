@@ -1,8 +1,15 @@
+# Web dev. framework
 flask
+# API client for docker
 docker-py>=0.7
+# YAML library for python
 pyyaml
+# Python Mocking and Patching Library for Testing
 mock
+# extends unittest to make testing easier
 nose
+# Code coverage measurement
 coverage
 Flask-Testing
+# Fast, simple object-to-object and broadcast signaling
 blinker
