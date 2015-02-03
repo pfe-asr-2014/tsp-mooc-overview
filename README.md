@@ -9,6 +9,8 @@ A service for the TSP MOOC platform right on your computer that let you acces, m
 
 ## Run container
 
+Run from already made container images (fmonniot/tsp-mooc-overview).
+
 ```sh
 # With boot2docker
 docker run -it -p 5000:5000 --name tsp-mooc-overview \
@@ -22,7 +24,9 @@ docker run -it -p 5000:5000 --name tsp-mooc-overview \
            fmonniot/tsp-mooc-overview
 ```
 
-## Tests
+## Development and Tests
+
+Requires [Fig](http://www.fig.sh/) to locally build a docker image (see fig.yml and Dockerfile).
 
 ```sh
 # Running tests
